@@ -10,6 +10,7 @@ try:
     from trdg import handwritten_text_generator
 except ImportError as e:
     print("Missing modules for handwritten text generation.")
+    print(e)
 
 
 class FakeTextDataGenerator(object):

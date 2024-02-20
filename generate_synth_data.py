@@ -9,8 +9,15 @@ import random
 import re
 
 
-NUM_IMAGES_TO_SAVE = 10  # Number of images to generate
-LANGUAGE = "cn"  # Language
+NUM_IMAGES_TO_SAVE = 20  # Number of images to generate
+LANGUAGE = "en"  # Language
+
+
+def margin_gen():
+    """
+    Generates a single tuple of 4 random integers between 0 and 10 (inclusive).
+    """
+    return tuple(random.randint(0, 10) for _ in range(4))
 
 
 def color_gen():
@@ -71,7 +78,7 @@ if __name__ == "__main__":
                 line = " ".join(line.split())  # Normalize spacing
                 all_combinations.append(line)
 
-    print(len(all_combinations))  # Print the number of text lines
+    # print(len(all_combinations))  # Print the number of text lines
 
     # Select a random sample of texts for image generation
     all_texts = random.sample(all_combinations, NUM_IMAGES_TO_SAVE)
@@ -89,29 +96,40 @@ if __name__ == "__main__":
         ).close()  # Create an empty labels file with UTF-8 encoding
 
     # Generate images in batches of 10
-    for i in range(0, NUM_IMAGES_TO_SAVE, 2):
+    for i in range(0, NUM_IMAGES_TO_SAVE, 5):
         # Slice the list of texts into a batch of 10
-        texts_batch = all_texts[i : i + 2]
+        texts_batch = all_texts[i : i + 5]
 
         # Create a new image generator specifically for the current batch
         generator = GeneratorFromStrings(
             texts_batch,
-            blur=2,  # Add a slight blur effect
-            size=random.randint(40, 60),  # Vary the text size randomly
+            blur=random.uniform(0, 2),  # Add a slight blur effect randomly
+            size=random.randint(50, 100),  # Vary the text size randomly
+            skewing_angle=random.randint(0, 20),  # Degree of potential skewing randomly
             language=LANGUAGE,  # Configure for Chinese characters
-            random_blur=True,  # Enable random variations in blur
-            random_skew=True,  # Introduce random skewing of the text
             orientation=get_orientation_with_bias(
-                bias_for_zero=0.7
-            ),  # Randomly choose horizontal/vertical orientation 70% bias for 0
-            skewing_angle=10,  # Degree of potential skewing
-            background_type=1,  # Select background type (refer to trdg documentation)
+                bias_for_zero=0.8
+            ),  # Randomly choose horizontal/vertical orientation 80% bias for 0
             text_color=color_gen(),  # Assign a random text color
             is_handwritten=False,  # Specify machine-printed style
+            background_type=random.randint(0, 3),
+            distorsion_type=random.randint(0, 3),
+            distorsion_orientation=random.randint(0, 1),
+            margins=margin_gen(),
         )
 
         # Process each text within the batch
         for text in texts_batch:
+            if len(text) > 40:  # Check if text length exceeds 20 characters
+                generator.size = random.randint(100, 150)  # Assign a larger size range
+                generator.blur = random.uniform(0, 0.5)  # Assign a smaller blur range
+
+            elif len(text) > 80:  # Check if text length exceeds 20 characters
+                generator.size = random.randint(150, 250)  # Assign a larger size range
+                generator.blur = 0  # Assign a smaller blur range
+                generator.distorsion_orientation = 0
+                distorsion_type = 0
+
             generate_image(
                 text, generator
             )  # Create and save an image using the current generator
