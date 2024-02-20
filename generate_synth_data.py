@@ -9,8 +9,14 @@ import random
 import re
 
 
+NUM_IMAGES_TO_SAVE = 10  # Number of images to generate
+LANGUAGE = "cn"  # Language
+
+
 def color_gen():
-    """Generates a random RGB color in hexadecimal format."""
+    """
+    Generates a random RGB color in hexadecimal format.
+    """
     r = random.randint(0, 255)
     g = random.randint(0, 255)
     b = random.randint(0, 255)
@@ -18,31 +24,47 @@ def color_gen():
     return hex_string
 
 
-def generate_image(text, generator):
-    """Generates an image with the given text and saves it along with its label.
+def get_orientation_with_bias(bias_for_zero=0.7):
+    """
+    Generates a random integer 0 or 1 with a bias towards 0.
+    """
 
-    Args:
-        text (str): The text to be displayed in the image.
-        generator (GeneratorFromStrings): The image generator object.
+    # Generate a random number between 0 and 1.
+    random_number = random.random()
+
+    # If the random number is less than the bias for 0, return 0.
+    # Otherwise, return 1.
+    if random_number < bias_for_zero:
+        return 0
+    else:
+        return 1
+
+
+def generate_image(text, generator):
+    """
+    Generates an image with the given text and saves it along with its label.
     """
 
     img, lbl = next(generator)  # Get the next image and its label from the generator
-    current_index = len(os.listdir("output")) - 1  # Determine the image index
-    image_filename = f"output/image{current_index}.png"
+    current_index = (
+        len(os.listdir(f"output/{LANGUAGE}")) - 1
+    )  # Determine the image index
+    image_filename = f"output/{LANGUAGE}/image{current_index}.png"
 
     img.save(image_filename)  # Save the image
 
-    with open("output/labels.txt", "a") as f:  # Open labels file in append mode
+    with open(
+        f"output/{LANGUAGE}/labels.txt", "a", encoding="utf-8"
+    ) as f:  # Open labels file in append mode
         f.write(f"{image_filename} {lbl}\n")  # Write filename and label
 
 
 # Main image generation logic
 if __name__ == "__main__":
-    NUM_IMAGES_TO_SAVE = 90  # Number of images to generate
 
     # Load text from the source file
     all_combinations = []
-    with open("source.txt", "r", encoding="utf-8") as file:
+    with open(f"source/source-{LANGUAGE}.txt", "r", encoding="utf-8") as file:
         for line in file:
             line = line.strip()  # Remove leading/trailing whitespace
             if line:
@@ -55,27 +77,33 @@ if __name__ == "__main__":
     all_texts = random.sample(all_combinations, NUM_IMAGES_TO_SAVE)
 
     # Create output folders if they don't exist
+    output_folder = f"output/{LANGUAGE}"  # Store the complete output path
+    os.makedirs(output_folder, exist_ok=True)  # Create all folders in the path
+
+    # Create output folders if they don't exist
     if not os.path.exists("output"):
         os.makedirs("output")
-    if not os.path.exists("output/labels.txt"):
-        open("output/labels.txt", "w").close()  # Create an empty labels file
+    if not os.path.exists(f"output/{LANGUAGE}/labels.txt"):
+        open(
+            f"output/{LANGUAGE}/labels.txt", "w", encoding="utf-8"
+        ).close()  # Create an empty labels file with UTF-8 encoding
 
     # Generate images in batches of 10
-    for i in range(0, NUM_IMAGES_TO_SAVE, 10):
+    for i in range(0, NUM_IMAGES_TO_SAVE, 2):
         # Slice the list of texts into a batch of 10
-        texts_batch = all_texts[i : i + 10]
+        texts_batch = all_texts[i : i + 2]
 
         # Create a new image generator specifically for the current batch
         generator = GeneratorFromStrings(
             texts_batch,
             blur=2,  # Add a slight blur effect
             size=random.randint(40, 60),  # Vary the text size randomly
-            language="cn",  # Configure for Chinese characters
+            language=LANGUAGE,  # Configure for Chinese characters
             random_blur=True,  # Enable random variations in blur
             random_skew=True,  # Introduce random skewing of the text
-            orientation=random.randint(
-                0, 1
-            ),  # Randomly choose horizontal/vertical orientation
+            orientation=get_orientation_with_bias(
+                bias_for_zero=0.7
+            ),  # Randomly choose horizontal/vertical orientation 70% bias for 0
             skewing_angle=10,  # Degree of potential skewing
             background_type=1,  # Select background type (refer to trdg documentation)
             text_color=color_gen(),  # Assign a random text color
