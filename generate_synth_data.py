@@ -10,7 +10,7 @@ import re
 
 
 NUM_IMAGES_TO_SAVE = 50  # Number of images to generate
-LANGUAGE = "cn"  # Language
+LANGUAGE = "vi"  # Language
 
 
 def margin_gen():
@@ -122,16 +122,26 @@ if __name__ == "__main__":
 
         # Process each text within the batch
         for text in texts_batch:
-            if len(text) > 40:  # Check if text length exceeds 20 characters
-                generator.size = random.randint(100, 150)  # Assign a larger size range
-                generator.blur = 0
 
-            elif len(text) > 80:  # Check if text length exceeds 20 characters
-                generator.size = random.randint(150, 250)  # Assign a larger size range
-                generator.blur = 0  # Assign a smaller blur range
-                generator.distorsion_orientation = 0
-                distorsion_type = 0
+            # Adjust generator settings based on text length for visual variety
+            if len(text) > 40:
+                generator.size = random.randint(100, 150)  # Larger size for longer text
+                generator.blur = 0  # Clear image for more readable longer text
 
-            generate_image(
-                text, generator
-            )  # Create and save an image using the current generator
+            elif len(text) > 80:
+                generator.size = random.randint(
+                    150, 250
+                )  # Even larger size for very long text
+                generator.blur = 0  # Maintain clarity
+                generator.distorsion_orientation = (
+                    0  # Reduce distortion for readability
+                )
+                distorsion_type = 0  # Reduce distortion effect type
+
+            # Attempt image generation and handle potential errors
+            try:
+                generate_image(text, generator)
+                print(f"Img created for text: {text}")
+
+            except Exception as e:
+                print(f"Image generation failed for text: {text}. Error: {e}")
