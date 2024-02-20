@@ -26,57 +26,64 @@ def generate_image(text, generator):
         generator (GeneratorFromStrings): The image generator object.
     """
 
-    img, lbl = next(generator)  # Get the next image/label pair
-    current_index = len(os.listdir("output")) - 1
+    img, lbl = next(generator)  # Get the next image and its label from the generator
+    current_index = len(os.listdir("output")) - 1  # Determine the image index
     image_filename = f"output/image{current_index}.png"
 
-    img.save(image_filename)
+    img.save(image_filename)  # Save the image
 
-    with open("output/labels.txt", "a") as f:
-        f.write(f"{image_filename} {lbl}\n")
+    with open("output/labels.txt", "a") as f:  # Open labels file in append mode
+        f.write(f"{image_filename} {lbl}\n")  # Write filename and label
 
 
 # Main image generation logic
 if __name__ == "__main__":
-    NUM_IMAGES_TO_SAVE = 90
+    NUM_IMAGES_TO_SAVE = 90  # Number of images to generate
 
-    # now given word list and number list, get all combinations
-    all_combinations = []  # Initialize an empty list to store text lines
-
-    with open(
-        "source.txt", "r", encoding="utf-8"
-    ) as file:  # Open the file in read mode
+    # Load text from the source file
+    all_combinations = []
+    with open("source.txt", "r", encoding="utf-8") as file:
         for line in file:
-            line = line.strip()
-
+            line = line.strip()  # Remove leading/trailing whitespace
             if line:
-                line = " ".join(line.split())
+                line = " ".join(line.split())  # Normalize spacing
                 all_combinations.append(line)
 
-    print(len(all_combinations))  # Check how many items are in the list
+    print(len(all_combinations))  # Print the number of text lines
+
+    # Select a random sample of texts for image generation
     all_texts = random.sample(all_combinations, NUM_IMAGES_TO_SAVE)
 
+    # Create output folders if they don't exist
     if not os.path.exists("output"):
         os.makedirs("output")
     if not os.path.exists("output/labels.txt"):
-        open("output/labels.txt", "w").close()
+        open("output/labels.txt", "w").close()  # Create an empty labels file
 
+    # Generate images in batches of 10
     for i in range(0, NUM_IMAGES_TO_SAVE, 10):
-        texts_batch = all_texts[i : i + 10]  # Slice 10 sequential texts
+        # Slice the list of texts into a batch of 10
+        texts_batch = all_texts[i : i + 10]
 
+        # Create a new image generator specifically for the current batch
         generator = GeneratorFromStrings(
-            texts_batch,  # Use the current batch of texts
-            blur=2,
-            size=random.randint(50, 60),
-            language="cn",
-            random_blur=True,
-            random_skew=True,
-            orientation=random.randint(0, 1),
-            skewing_angle=10,
-            background_type=1,
-            text_color=color_gen(),
-            is_handwritten=False,
+            texts_batch,
+            blur=2,  # Add a slight blur effect
+            size=random.randint(40, 60),  # Vary the text size randomly
+            language="cn",  # Configure for Chinese characters
+            random_blur=True,  # Enable random variations in blur
+            random_skew=True,  # Introduce random skewing of the text
+            orientation=random.randint(
+                0, 1
+            ),  # Randomly choose horizontal/vertical orientation
+            skewing_angle=10,  # Degree of potential skewing
+            background_type=1,  # Select background type (refer to trdg documentation)
+            text_color=color_gen(),  # Assign a random text color
+            is_handwritten=False,  # Specify machine-printed style
         )
 
-        for text in texts_batch:  # Process each text in the batch
-            generate_image(text, generator)
+        # Process each text within the batch
+        for text in texts_batch:
+            generate_image(
+                text, generator
+            )  # Create and save an image using the current generator
