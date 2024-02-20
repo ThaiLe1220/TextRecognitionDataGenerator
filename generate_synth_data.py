@@ -9,8 +9,8 @@ import random
 import re
 
 
-NUM_IMAGES_TO_SAVE = 20  # Number of images to generate
-LANGUAGE = "en"  # Language
+NUM_IMAGES_TO_SAVE = 50  # Number of images to generate
+LANGUAGE = "cn"  # Language
 
 
 def margin_gen():
@@ -102,27 +102,29 @@ if __name__ == "__main__":
 
         # Create a new image generator specifically for the current batch
         generator = GeneratorFromStrings(
-            texts_batch,
-            blur=random.uniform(0, 2),  # Add a slight blur effect randomly
-            size=random.randint(50, 100),  # Vary the text size randomly
-            skewing_angle=random.randint(0, 20),  # Degree of potential skewing randomly
-            language=LANGUAGE,  # Configure for Chinese characters
+            texts_batch,  # A batch of text strings to be used in the generated images
+            blur=random.randint(0, 2),  # Add a slight blur effect randomly (0-2 level)
+            size=random.randint(50, 100),  # Vary the text size randomly within a range
+            skewing_angle=random.randint(0, 25),  # Randomly skew text up to 25 degrees
+            language=LANGUAGE,
             orientation=get_orientation_with_bias(
                 bias_for_zero=0.8
-            ),  # Randomly choose horizontal/vertical orientation 80% bias for 0
-            text_color=color_gen(),  # Assign a random text color
-            is_handwritten=False,  # Specify machine-printed style
-            background_type=random.randint(0, 3),
-            distorsion_type=random.randint(0, 3),
-            distorsion_orientation=random.randint(0, 1),
-            margins=margin_gen(),
+            ),  # Choose text orientation with 80% chance of horizontal
+            text_color=color_gen(),  # Assign a randomly generated text color
+            is_handwritten=False,  # Specify a machine-printed font style
+            background_type=random.randint(0, 3),  # Select a random background type
+            distorsion_type=random.randint(0, 3),  # Select a random distortion type
+            distorsion_orientation=random.randint(
+                0, 1
+            ),  # Random distortion orientation
+            margins=margin_gen(),  # Get randomly generated margins for the text
         )
 
         # Process each text within the batch
         for text in texts_batch:
             if len(text) > 40:  # Check if text length exceeds 20 characters
                 generator.size = random.randint(100, 150)  # Assign a larger size range
-                generator.blur = random.uniform(0, 0.5)  # Assign a smaller blur range
+                generator.blur = 0
 
             elif len(text) > 80:  # Check if text length exceeds 20 characters
                 generator.size = random.randint(150, 250)  # Assign a larger size range
