@@ -133,9 +133,11 @@ class GeneratorFromStrings:
                 self.image_mode,
                 self.output_bboxes,
             ),
-            self.orig_strings[(self.generated_count - 1) % len(self.orig_strings)]
-            if self.rtl
-            else self.strings[(self.generated_count - 1) % len(self.strings)],
+            (
+                self.orig_strings[(self.generated_count - 1) % len(self.orig_strings)]
+                if self.rtl
+                else self.strings[(self.generated_count - 1) % len(self.strings)]
+            ),
         )
 
     def reshape_rtl(self, strings: list, rtl_shaper: ArabicReshaper):
