@@ -26,21 +26,28 @@ def load_dict(path: str) -> List[str]:
     return word_dict
 
 
-def load_fonts(lang: str) -> List[str]:
+def load_fonts(lang: str, is_handwritten: bool) -> List[str]:
     """Load all fonts in the fonts directories"""
 
-    if lang in os.listdir(os.path.join(os.path.dirname(__file__), "fonts")):
+    if is_handwritten:
+        fonts_dir = "fonts-hw"
+    else:
+        fonts_dir = "fonts_dir"  # Updated here
+
+    if lang in os.listdir(
+        os.path.join(os.path.dirname(__file__), fonts_dir)
+    ):  # Updated here
         return [
-            os.path.join(os.path.dirname(__file__), "fonts/{}".format(lang), font)
+            os.path.join(os.path.dirname(__file__), fonts_dir, lang, font)
             for font in os.listdir(
-                os.path.join(os.path.dirname(__file__), "fonts/{}".format(lang))
+                os.path.join(os.path.dirname(__file__), fonts_dir, lang)
             )
         ]
     else:
         return [
-            os.path.join(os.path.dirname(__file__), "fonts/latin", font)
+            os.path.join(os.path.dirname(__file__), fonts_dir, "latin", font)
             for font in os.listdir(
-                os.path.join(os.path.dirname(__file__), "fonts/latin")
+                os.path.join(os.path.dirname(__file__), fonts_dir, "latin")
             )
         ]
 
@@ -80,14 +87,19 @@ def mask_to_bboxes(mask: List[Tuple[int, int, int, int]], tess: bool = False):
             bboxes.append(
                 (
                     max(0, np.min(letter[1]) - 1),
-                    max(0, np.min(letter[0]) - 1)
-                    if not tess
-                    else max(0, mask_arr.shape[0] - np.max(letter[0]) - 1),
+                    (
+                        max(0, np.min(letter[0]) - 1)
+                        if not tess
+                        else max(0, mask_arr.shape[0] - np.max(letter[0]) - 1)
+                    ),
                     min(mask_arr.shape[1] - 1, np.max(letter[1]) + 1),
-                    min(mask_arr.shape[0] - 1, np.max(letter[0]) + 1)
-                    if not tess
-                    else min(
-                        mask_arr.shape[0] - 1, mask_arr.shape[0] - np.min(letter[0]) + 1
+                    (
+                        min(mask_arr.shape[0] - 1, np.max(letter[0]) + 1)
+                        if not tess
+                        else min(
+                            mask_arr.shape[0] - 1,
+                            mask_arr.shape[0] - np.min(letter[0]) + 1,
+                        )
                     ),
                 )
             )

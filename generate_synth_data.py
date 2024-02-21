@@ -111,7 +111,7 @@ if __name__ == "__main__":
                 bias_for_zero=0.8
             ),  # Choose text orientation with 80% chance of horizontal
             text_color=color_gen(),  # Assign a randomly generated text color
-            is_handwritten=False,  # Specify a machine-printed font style
+            is_handwritten=True,  # Specify a machine-printed font style
             background_type=random.randint(0, 3),  # Select a random background type
             distorsion_type=random.randint(0, 3),  # Select a random distortion type
             distorsion_orientation=random.randint(

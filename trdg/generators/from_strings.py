@@ -50,7 +50,7 @@ class GeneratorFromStrings:
         self.strings = strings
         self.fonts = fonts
         if len(fonts) == 0:
-            self.fonts = load_fonts(language)
+            self.fonts = load_fonts(language, is_handwritten)
         self.rtl = rtl
         self.orig_strings = []
         if self.rtl:

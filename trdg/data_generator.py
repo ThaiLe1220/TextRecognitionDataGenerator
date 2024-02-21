@@ -65,24 +65,27 @@ class FakeTextDataGenerator(object):
         ##########################
         # Create picture of text #
         ##########################
-        if is_handwritten:
-            if orientation == 1:
-                raise ValueError("Vertical handwritten text is unavailable")
-            image, mask = handwritten_text_generator.generate(text, text_color)
-        else:
-            image, mask = computer_text_generator.generate(
-                text,
-                font,
-                text_color,
-                size,
-                orientation,
-                space_width,
-                character_spacing,
-                fit,
-                word_split,
-                stroke_width,
-                stroke_fill,
-            )
+
+        # if is_handwritten:
+        #     if orientation == 1:
+        #         raise ValueError("Vertical handwritten text is unavailable")
+        #     image, mask = handwritten_text_generator.generate(text, text_color)
+        # else:
+
+        image, mask = computer_text_generator.generate(
+            text,
+            font,
+            text_color,
+            size,
+            orientation,
+            space_width,
+            character_spacing,
+            fit,
+            word_split,
+            stroke_width,
+            stroke_fill,
+        )
+
         random_angle = rnd.randint(0 - skewing_angle, skewing_angle)
 
         rotated_img = image.rotate(
