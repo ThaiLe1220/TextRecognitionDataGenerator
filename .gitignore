@@ -101,6 +101,3 @@ ENV/
 .mypy_cache/
 
 .vscode/*
-
-# output
-output/

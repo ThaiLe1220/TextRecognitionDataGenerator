@@ -96,15 +96,15 @@ if __name__ == "__main__":
         ).close()  # Create an empty labels file with UTF-8 encoding
 
     # Generate images in batches of 10
-    for i in range(0, NUM_IMAGES_TO_SAVE, 5):
+    for i in range(0, NUM_IMAGES_TO_SAVE, 10):
         # Slice the list of texts into a batch of 10
-        texts_batch = all_texts[i : i + 5]
+        texts_batch = all_texts[i : i + 10]
 
         # Create a new image generator specifically for the current batch
         generator = GeneratorFromStrings(
             texts_batch,  # A batch of text strings to be used in the generated images
             blur=random.randint(0, 2),  # Add a slight blur effect randomly (0-2 level)
-            # skewing_angle=random.randint(0, 30),  # Randomly skew text up to 30 degrees
+            skewing_angle=random.randint(0, 30),  # Randomly skew text up to 30 degrees
             random_skew=True,
             language=LANGUAGE,
             orientation=get_orientation_with_bias(
