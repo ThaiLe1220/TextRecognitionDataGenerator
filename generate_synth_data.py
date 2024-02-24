@@ -31,7 +31,7 @@ def color_gen():
     return hex_string
 
 
-def get_orientation_with_bias(bias_for_zero=0.7):
+def get_orientation_with_bias(bias_for_zero=0.8):
     """
     Generates a random integer 0 or 1 with a bias towards 0.
     """
