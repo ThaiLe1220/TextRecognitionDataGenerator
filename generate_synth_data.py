@@ -10,7 +10,7 @@ import re
 
 
 NUM_IMAGES_TO_SAVE = 1000  # Number of images to generate
-LANGUAGE = "vi"  # Language
+LANGUAGE = "en"  # Language
 
 
 def margin_gen():
@@ -108,7 +108,7 @@ if __name__ == "__main__":
             random_skew=True,
             language=LANGUAGE,
             orientation=get_orientation_with_bias(
-                bias_for_zero=0.7
+                bias_for_zero=0.8
             ),  # Choose text orientation with 70% chance of horizontal
             text_color=color_gen(),  # Assign a randomly generated text color
             is_handwritten=True,  # Specify a machine-printed font style
