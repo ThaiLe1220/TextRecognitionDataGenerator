@@ -54,14 +54,14 @@ def generate_image(text, generator):
 
     img, lbl = next(generator)  # Get the next image and its label from the generator
     current_index = (
-        len(os.listdir(f"output/{LANGUAGE}")) - 1
+        len(os.listdir(f"output2/{LANGUAGE}")) - 1
     )  # Determine the image index
-    image_filename = f"output/{LANGUAGE}/image{current_index}.png"
+    image_filename = f"output2/{LANGUAGE}/image{current_index}.png"
 
     img.save(image_filename)  # Save the image
 
     with open(
-        f"output/{LANGUAGE}/labels.txt", "a", encoding="utf-8"
+        f"output2/{LANGUAGE}/labels.txt", "a", encoding="utf-8"
     ) as f:  # Open labels file in append mode
         f.write(f"{image_filename} {lbl}\n")  # Write filename and label
 
@@ -83,16 +83,16 @@ if __name__ == "__main__":
     # Select a random sample of texts for image generation
     all_texts = random.sample(all_combinations, NUM_IMAGES_TO_SAVE)
 
-    # Create output folders if they don't exist
-    output_folder = f"output/{LANGUAGE}"  # Store the complete output path
-    os.makedirs(output_folder, exist_ok=True)  # Create all folders in the path
+    # Create output2 folders if they don't exist
+    output2_folder = f"output2/{LANGUAGE}"  # Store the complete output2 path
+    os.makedirs(output2_folder, exist_ok=True)  # Create all folders in the path
 
-    # Create output folders if they don't exist
-    if not os.path.exists("output"):
-        os.makedirs("output")
-    if not os.path.exists(f"output/{LANGUAGE}/labels.txt"):
+    # Create output2 folders if they don't exist
+    if not os.path.exists("output2"):
+        os.makedirs("output2")
+    if not os.path.exists(f"output2/{LANGUAGE}/labels.txt"):
         open(
-            f"output/{LANGUAGE}/labels.txt", "w", encoding="utf-8"
+            f"output2/{LANGUAGE}/labels.txt", "w", encoding="utf-8"
         ).close()  # Create an empty labels file with UTF-8 encoding
 
     # Generate images in batches of 10
@@ -104,11 +104,11 @@ if __name__ == "__main__":
         generator = GeneratorFromStrings(
             texts_batch,  # A batch of text strings to be used in the generated images
             blur=0,
-            skewing_angle=random.randint(0, 20),  # Randomly skew text up to 30 degrees
+            skewing_angle=random.randint(0, 10),  # Randomly skew text up to 30 degrees
             random_skew=True,
             language=LANGUAGE,
             orientation=get_orientation_with_bias(
-                bias_for_zero=0.8
+                bias_for_zero=0.9
             ),  # Choose text orientation with 80% chance of horizontal
             text_color=color_gen(),  # Assign a randomly generated text color
             is_handwritten=True,  # Specify a machine-printed font style
