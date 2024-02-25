@@ -9,7 +9,7 @@ import random
 import re
 
 
-NUM_IMAGES_TO_SAVE = 1000  # Number of images to generate
+NUM_IMAGES_TO_SAVE = 10000  # Number of images to generate
 LANGUAGE = "en"  # Language
 
 
@@ -97,19 +97,19 @@ if __name__ == "__main__":
 
     # Generate images in batches of 10
     for i in range(0, NUM_IMAGES_TO_SAVE, 10):
-        # Slice the list of texts into a batch of 10
+        # Slice the list of texts into a batch of 5
         texts_batch = all_texts[i : i + 10]
 
         # Create a new image generator specifically for the current batch
         generator = GeneratorFromStrings(
             texts_batch,  # A batch of text strings to be used in the generated images
-            blur=random.randint(0, 2),  # Add a slight blur effect randomly (0-2 level)
-            skewing_angle=random.randint(0, 30),  # Randomly skew text up to 30 degrees
+            blur=0,
+            skewing_angle=random.randint(0, 20),  # Randomly skew text up to 30 degrees
             random_skew=True,
             language=LANGUAGE,
             orientation=get_orientation_with_bias(
                 bias_for_zero=0.8
-            ),  # Choose text orientation with 70% chance of horizontal
+            ),  # Choose text orientation with 80% chance of horizontal
             text_color=color_gen(),  # Assign a randomly generated text color
             is_handwritten=True,  # Specify a machine-printed font style
             background_type=random.randint(0, 3),  # Select a random background type
@@ -117,7 +117,6 @@ if __name__ == "__main__":
             distorsion_orientation=random.randint(0, 2),  # distortion orientation
             margins=margin_gen(),  # Get randomly generated margins for the text
             alignment=random.randint(0, 2),  # Select a random alignment
-            space_width=random.uniform(0, 3),  # Select a random space width
             character_spacing=random.randint(0, 2),  # Select a random character spacing
         )
 
@@ -125,7 +124,7 @@ if __name__ == "__main__":
         for text in texts_batch:
             if len(text) > 70:
                 generator.size = random.randint(150, 200)
-                generator.blur = random.randint(0, 1)
+                generator.blur = 0
                 generator.distorsion_type = random.choice([0, 3])
 
                 if len(text) > 90:
@@ -134,7 +133,7 @@ if __name__ == "__main__":
                     generator.size = random.randint(250, 300)
 
             else:
-                generator.size = random.randint(50, 150)
+                generator.size = random.randint(75, 125)
 
             # Attempt image generation and handle potential errors
             try:
