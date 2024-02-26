@@ -9,7 +9,7 @@ import random
 import re
 
 
-NUM_IMAGES_TO_SAVE = 2000  # Number of images to generate
+NUM_IMAGES_TO_SAVE = 1000  # Number of images to generate
 LANGUAGE = "en"  # Language
 
 
@@ -31,7 +31,7 @@ def color_gen():
     return hex_string
 
 
-def get_orientation_with_bias(bias_for_zero=0.8):
+def get_orientation_with_bias(bias_for_zero=0.9):
     """
     Generates a random integer 0 or 1 with a bias towards 0.
     """
@@ -54,14 +54,14 @@ def generate_image(text, generator):
 
     img, lbl = next(generator)  # Get the next image and its label from the generator
     current_index = (
-        len(os.listdir(f"output4/{LANGUAGE}")) - 1
+        len(os.listdir(f"output1/{LANGUAGE}")) - 1
     )  # Determine the image index
-    image_filename = f"output4/{LANGUAGE}/image{current_index}.png"
+    image_filename = f"output1/{LANGUAGE}/image{current_index}.png"
 
     img.save(image_filename)  # Save the image
 
     with open(
-        f"output4/{LANGUAGE}/labels.txt", "a", encoding="utf-8"
+        f"output1/{LANGUAGE}/labels.txt", "a", encoding="utf-8"
     ) as f:  # Open labels file in append mode
         f.write(f"{image_filename} {lbl}\n")  # Write filename and label
 
@@ -83,16 +83,16 @@ if __name__ == "__main__":
     # Select a random sample of texts for image generation
     all_texts = random.sample(all_combinations, NUM_IMAGES_TO_SAVE)
 
-    # Create output4 folders if they don't exist
-    output4_folder = f"output4/{LANGUAGE}"  # Store the complete output4 path
-    os.makedirs(output4_folder, exist_ok=True)  # Create all folders in the path
+    # Create output1 folders if they don't exist
+    output1_folder = f"output1/{LANGUAGE}"  # Store the complete output1 path
+    os.makedirs(output1_folder, exist_ok=True)  # Create all folders in the path
 
-    # Create output4 folders if they don't exist
-    if not os.path.exists("output4"):
-        os.makedirs("output4")
-    if not os.path.exists(f"output4/{LANGUAGE}/labels.txt"):
+    # Create output1 folders if they don't exist
+    if not os.path.exists("output1"):
+        os.makedirs("output1")
+    if not os.path.exists(f"output1/{LANGUAGE}/labels.txt"):
         open(
-            f"output4/{LANGUAGE}/labels.txt", "w", encoding="utf-8"
+            f"output1/{LANGUAGE}/labels.txt", "w", encoding="utf-8"
         ).close()  # Create an empty labels file with UTF-8 encoding
 
     # Generate images in batches of 10
@@ -104,7 +104,7 @@ if __name__ == "__main__":
         generator = GeneratorFromStrings(
             texts_batch,  # A batch of text strings to be used in the generated images
             blur=0,
-            skewing_angle=random.randint(0, 20),  # Randomly skew text up to 30 degrees
+            skewing_angle=random.randint(0, 10),  # Randomly skew text up to 30 degrees
             random_skew=True,
             language=LANGUAGE,
             orientation=get_orientation_with_bias(
@@ -124,10 +124,10 @@ if __name__ == "__main__":
         # Process each text within the batch
         for text in texts_batch:
             if len(text) > 40:
-                generator.size = random.randint(150, 250)
+                generator.size = random.randint(150, 225)
                 generator.distorsion_type = random.choice([0, 3])
 
-                if len(text) > 60:
+                if len(text) > 80:
                     continue
 
             else:
