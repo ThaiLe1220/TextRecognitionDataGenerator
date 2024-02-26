@@ -9,7 +9,7 @@ import random
 import re
 
 
-NUM_IMAGES_TO_SAVE = 5000  # Number of images to generate
+NUM_IMAGES_TO_SAVE = 2000  # Number of images to generate
 LANGUAGE = "en"  # Language
 
 
