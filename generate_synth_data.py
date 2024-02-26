@@ -9,7 +9,7 @@ import random
 import re
 
 
-NUM_IMAGES_TO_SAVE = 10000  # Number of images to generate
+NUM_IMAGES_TO_SAVE = 5000  # Number of images to generate
 LANGUAGE = "en"  # Language
 
 
@@ -103,7 +103,6 @@ if __name__ == "__main__":
         # Create a new image generator specifically for the current batch
         generator = GeneratorFromStrings(
             texts_batch,  # A batch of text strings to be used in the generated images
-            blur=random.randint(0, 1),
             skewing_angle=random.randint(0, 30),  # Randomly skew text up to 30 degrees
             random_skew=True,
             language=LANGUAGE,
@@ -126,12 +125,14 @@ if __name__ == "__main__":
 
             if len(text) > 40:
                 generator.size = random.randint(150, 225)
+                generator.blur = 0
 
                 if len(text) > 80:
                     continue
 
             else:
                 generator.size = random.randint(75, 150)
+                generator.blur = random.randint(0, 1)
 
             # Attempt image generation and handle potential errors
             try:
