@@ -95,10 +95,10 @@ if __name__ == "__main__":
             f"output1/{LANGUAGE}/labels.txt", "w", encoding="utf-8"
         ).close()  # Create an empty labels file with UTF-8 encoding
 
-    # Generate images in batches of 10
-    for i in range(0, NUM_IMAGES_TO_SAVE, 10):
+    # Generate images in batches of 5
+    for i in range(0, NUM_IMAGES_TO_SAVE, 5):
         # Slice the list of texts into a batch of 5
-        texts_batch = all_texts[i : i + 10]
+        texts_batch = all_texts[i : i + 5]
 
         # Create a new image generator specifically for the current batch
         generator = GeneratorFromStrings(
@@ -109,7 +109,7 @@ if __name__ == "__main__":
             language=LANGUAGE,
             orientation=get_orientation_with_bias(
                 bias_for_zero=0.9
-            ),  # Choose text orientation with 80% chance of horizontal
+            ),  # Choose text orientation with 90% chance of horizontal
             text_color="black",  # Assign a randomly generated text color
             is_handwritten=True,  # Specify a machine-printed font style
             background_type=random.randint(0, 3),  # Select a random background type
@@ -123,9 +123,11 @@ if __name__ == "__main__":
 
         # Process each text within the batch
         for text in texts_batch:
+            if generator.background_type == 3:
+                distorsion_type = random.randint(0, 2)
+
             if len(text) > 40:
                 generator.size = random.randint(150, 225)
-                generator.distorsion_type = random.choice([0, 3])
 
                 if len(text) > 80:
                     continue
