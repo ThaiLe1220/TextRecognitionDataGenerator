@@ -9,7 +9,7 @@ import random
 import re
 
 
-NUM_IMAGES_TO_SAVE = 5000  # Number of images to generate
+NUM_IMAGES_TO_SAVE = 10000  # Number of images to generate
 LANGUAGE = "en"  # Language
 
 
@@ -103,20 +103,20 @@ if __name__ == "__main__":
         # Create a new image generator specifically for the current batch
         generator = GeneratorFromStrings(
             texts_batch,  # A batch of text strings to be used in the generated images
-            blur=0,
-            skewing_angle=random.randint(0, 10),  # Randomly skew text up to 30 degrees
+            blur=random.randint(0, 1),
+            skewing_angle=random.randint(0, 30),  # Randomly skew text up to 30 degrees
             random_skew=True,
             language=LANGUAGE,
             # orientation=get_orientation_with_bias(bias_for_zero=0.9),
-            text_color="black",  # Assign a randomly generated text color
+            text_color=color_gen(),  # Assign a randomly generated text color
             is_handwritten=True,  # Specify a machine-printed font style
             background_type=random.randint(0, 3),  # Select a random background type
             distorsion_type=random.randint(0, 3),  # Select a random distortion type
             distorsion_orientation=random.randint(0, 2),  # distortion orientation
             margins=margin_gen(),  # Get randomly generated margins for the text
             alignment=random.randint(0, 2),  # Select a random alignment
-            # character_spacing=random.randint(0, 1),  # Select a random character spacing
-            # space_width=random.uniform(1, 2),  # Select a random space width
+            character_spacing=random.randint(0, 1),  # Select a random character spacing
+            space_width=random.uniform(1, 2),  # Select a random space width
         )
 
         # Process each text within the batch
