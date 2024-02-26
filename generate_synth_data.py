@@ -54,14 +54,14 @@ def generate_image(text, generator):
 
     img, lbl = next(generator)  # Get the next image and its label from the generator
     current_index = (
-        len(os.listdir(f"output1/{LANGUAGE}")) - 1
+        len(os.listdir(f"output2/{LANGUAGE}")) - 1
     )  # Determine the image index
-    image_filename = f"output1/{LANGUAGE}/image{current_index}.png"
+    image_filename = f"output2/{LANGUAGE}/image{current_index}.png"
 
     img.save(image_filename)  # Save the image
 
     with open(
-        f"output1/{LANGUAGE}/labels.txt", "a", encoding="utf-8"
+        f"output2/{LANGUAGE}/labels.txt", "a", encoding="utf-8"
     ) as f:  # Open labels file in append mode
         f.write(f"{image_filename} {lbl}\n")  # Write filename and label
 
@@ -83,16 +83,16 @@ if __name__ == "__main__":
     # Select a random sample of texts for image generation
     all_texts = random.sample(all_combinations, NUM_IMAGES_TO_SAVE)
 
-    # Create output1 folders if they don't exist
-    output1_folder = f"output1/{LANGUAGE}"  # Store the complete output1 path
-    os.makedirs(output1_folder, exist_ok=True)  # Create all folders in the path
+    # Create output2 folders if they don't exist
+    output2_folder = f"output2/{LANGUAGE}"  # Store the complete output2 path
+    os.makedirs(output2_folder, exist_ok=True)  # Create all folders in the path
 
-    # Create output1 folders if they don't exist
-    if not os.path.exists("output1"):
-        os.makedirs("output1")
-    if not os.path.exists(f"output1/{LANGUAGE}/labels.txt"):
+    # Create output2 folders if they don't exist
+    if not os.path.exists("output2"):
+        os.makedirs("output2")
+    if not os.path.exists(f"output2/{LANGUAGE}/labels.txt"):
         open(
-            f"output1/{LANGUAGE}/labels.txt", "w", encoding="utf-8"
+            f"output2/{LANGUAGE}/labels.txt", "w", encoding="utf-8"
         ).close()  # Create an empty labels file with UTF-8 encoding
 
     # Generate images in batches of 5
