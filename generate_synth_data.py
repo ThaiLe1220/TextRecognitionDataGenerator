@@ -110,7 +110,6 @@ if __name__ == "__main__":
             text_color=color_gen(),  # Assign a randomly generated text color
             is_handwritten=True,  # Specify a machine-printed font style
             background_type=random.randint(0, 3),  # Select a random background type
-            distorsion_type=random.randint(0, 3),  # Select a random distortion type
             distorsion_orientation=random.randint(0, 2),  # distortion orientation
             margins=margin_gen(),  # Get randomly generated margins for the text
             alignment=random.randint(0, 2),  # Select a random alignment
@@ -120,19 +119,18 @@ if __name__ == "__main__":
 
         # Process each text within the batch
         for text in texts_batch:
-            if generator.background_type == 3:
-                distorsion_type = random.randint(0, 2)
-
-            if len(text) > 40:
-                generator.size = random.randint(150, 225)
+            if len(text) > 60:
+                generator.size = random.randint(150, 255)
                 generator.blur = 0
+                generator.distorsion_type = 0
 
                 if len(text) > 80:
                     continue
 
             else:
-                generator.size = random.randint(75, 150)
+                generator.size = random.randint(80, 150)
                 generator.blur = random.randint(0, 1)
+                generator.distorsion_type = random.randint(0, 3)
 
             # Attempt image generation and handle potential errors
             try:
