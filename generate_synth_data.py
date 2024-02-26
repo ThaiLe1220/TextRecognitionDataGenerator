@@ -106,7 +106,7 @@ if __name__ == "__main__":
             skewing_angle=random.randint(0, 30),  # Randomly skew text up to 30 degrees
             random_skew=True,
             language=LANGUAGE,
-            # orientation=get_orientation_with_bias(bias_for_zero=0.9),
+            orientation=get_orientation_with_bias(bias_for_zero=0.9),
             text_color=color_gen(),  # Assign a randomly generated text color
             is_handwritten=True,  # Specify a machine-printed font style
             background_type=random.randint(0, 3),  # Select a random background type
